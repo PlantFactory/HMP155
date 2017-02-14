@@ -3,6 +3,7 @@
 HMP155 vaisala(Serial, 24);
 
 void setup() {
+  Serial.begin(9600, 7E1);
   vaisala.begin();
 }
 
