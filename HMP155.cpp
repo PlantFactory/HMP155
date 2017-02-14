@@ -18,11 +18,11 @@ void HMP155::begin(void) {
   this->stream.print("FORM 2.2 Ta \",\" 2.2 Tw \",\" 2.2 RH #r #n\r");
   this->stream.flush();
   digitalWrite(this->rw_pin, LOW);
-  this->stream.readStringUntil('\n'); // recv: "OK"
+  delay(10);
+  Serial.println("VAISALA : " + this->stream.readStringUntil('\n')); // recv: "OK"
 }
 
 bool HMP155::read(void) {
-  String responce;
   char token_buf[20];
   char *token_ptr;
 
@@ -30,15 +30,20 @@ bool HMP155::read(void) {
   this->stream.print("SEND\r");
   this->stream.flush();
   digitalWrite(this->rw_pin, LOW);
-  responce = this->stream.readStringUntil('\n'); // recv: "??.??,??.??,??.??"
-  responce.toCharArray(token_buf, 20);
+  delay(10);
+
+  this->stream.readBytesUntil('\n', token_buf, 20); // recv: "??.??,??.??,??.??"
+  Serial.print("VAISALA : ");
+  Serial.println(token_buf);
 
   token_ptr = strtok(token_buf, ",");
-  this->ta = atof(token_ptr);
+  this->_ta = atof(token_ptr);
   token_ptr = strtok(NULL, ",");
-  this->tw = atof(token_ptr);
+  this->_tw = atof(token_ptr);
   token_ptr = strtok(NULL, ",");
-  this->rh = atof(token_ptr);
+  this->_rh = atof(token_ptr);
+
+  return true;
 }
 
 float HMP155::vpd(void) {
