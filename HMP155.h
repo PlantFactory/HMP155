@@ -29,6 +29,13 @@ class HMP155 {
 
     inline float calcE(float t) { return 0.61365*exp((17.502*t)/(240.97+t)); }
 
+    void flushSerialRecvBuffuer(void) {
+      digitalWrite(this->rw_pin, LOW);
+      while(this->stream.available()) {
+        this->stream.read();
+      }
+    }
+
   public:
     HMP155(Stream &stream, uint8_t rw_pin) : stream(stream), rw_pin(rw_pin) {
       pinMode(rw_pin, OUTPUT);

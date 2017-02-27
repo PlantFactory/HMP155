@@ -14,12 +14,14 @@
 #include <string.h>
 
 void HMP155::begin(void) {
+  flushSerialRecvBuffuer();
+
   digitalWrite(this->rw_pin, HIGH);
   this->stream.print("FORM 2.2 Ta \",\" 2.2 Tw \",\" 2.2 RH #r #n\r");
   this->stream.flush();
   digitalWrite(this->rw_pin, LOW);
-  delay(10);
-  Serial.println("VAISALA : " + this->stream.readStringUntil('\n')); // recv: "OK"
+  Serial.print("HMP155 : ");
+  Serial.println(this->stream.readString());
 }
 
 bool HMP155::read(void) {
@@ -30,10 +32,9 @@ bool HMP155::read(void) {
   this->stream.print("SEND\r");
   this->stream.flush();
   digitalWrite(this->rw_pin, LOW);
-  delay(10);
 
   this->stream.readBytesUntil('\n', token_buf, 20); // recv: "??.??,??.??,??.??"
-  Serial.print("VAISALA : ");
+  Serial.print("HMP155 : ");
   Serial.println(token_buf);
 
   token_ptr = strtok(token_buf, ",");

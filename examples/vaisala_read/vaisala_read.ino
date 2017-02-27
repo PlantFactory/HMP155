@@ -1,21 +1,25 @@
 #include "HMP155.h"
 
-HMP155 vaisala(Serial, 24);
+HMP155 vaisala(Serial2, 24);
 
 void setup() {
-  Serial.begin(9600, 7E1);
+  Serial.begin(9600);
+  Serial2.begin(9600, SERIAL_7E1);
+  pinMode(24, OUTPUT);
+
   vaisala.begin();
 }
 
 void loop() {
+  Serial.println(F("reading"));
   vaisala.read();
-  Serial.print(F("Temperature of additonal sensor"));
+  Serial.println(F("Temperature of additonal sensor"));
   Serial.println(vaisala.ta());
-  Serial.print(F("Temperature of wet-bulb"));
+  Serial.println(F("Temperature of wet-bulb"));
   Serial.println(vaisala.tw());
-  Serial.print(F("Relative humidity"));
+  Serial.println(F("Relative humidity"));
   Serial.println(vaisala.rh());
-  Serial.print(F("VPD"));
+  Serial.println(F("VPD"));
   Serial.println(vaisala.vpd());
-  delay(1000);
+  delay(5000);
 }
